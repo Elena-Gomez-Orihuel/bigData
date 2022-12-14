@@ -73,7 +73,7 @@ if __name__ == '__main__':
     linear_regression_model = LinearRegression(featuresCol='features',
                                                labelCol='ArrDelay',
                                                maxIter=100,
-                                               regParam=0.3,
+                                               regParam=0.2,
                                                elasticNetParam=0.8)
     # Building the model
 
