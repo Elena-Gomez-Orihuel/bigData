@@ -13,8 +13,7 @@ import pyspark.sql.dataframe
 #input_dataset_path = "./resources/2000.csv"
 input_dataset_path = "C:/Users/USUARIO/Desktop/Master HMDA/1 Semester/BIG DATA/Flight Detection/resources/2000.csv"
 
-# Basically what i have written here is the Linear Regression Model as it is as well as dropping the useless columns,
-# what the data cleaning is needed as well as a interface for the user to interact with our application
+
 
 # The application will start here as it is executed, we can create a little console menu like in the example
 if __name__ == '__main__':
@@ -22,8 +21,7 @@ if __name__ == '__main__':
 
     spark = SparkSession.builder.appName("Linear Regression").master("local[*]").getOrCreate()
     data = spark.read.csv(path=input_dataset_path, inferSchema=True, header=True)
-    # Here we delete all the instances that have been cancelled or that do not have a value in DepDelay, as well as formatting it if needed
-    # beautiful cleaning code here
+  
     print('----------------PREPROCESSING--------------------------')
     #Eliminating cancelled flights 
     data = data[data.Cancelled != 1]
@@ -42,7 +40,7 @@ if __name__ == '__main__':
 
     #Changing numerical datatypes to double  --> should we generalize and do this for all columns?  
     data = data.withColumn('DepDelay', data.DepDelay.cast('double'))
-    data = data.withColumn('CRSElapsedTime', data.CRSElapsedTime.cast('double'))
+    data = data.withColumn('CRSArrTime', data.CRSElapsedTime.cast('double'))
     data = data.withColumn('ArrDelay', data.ArrDelay.cast('double'))
 
 
@@ -51,7 +49,7 @@ if __name__ == '__main__':
 
     print('-----------------BUILDING MODEL----------------')
     # Prepare independent variable(feature) and dependant variable using assembler
-    vector_assembler = VectorAssembler(inputCols=['DepDelay', 'TaxiOut', 'CRSArrTime'], outputCol='features')  # 2Dimensional array
+    vector_assembler = VectorAssembler(inputCols=['DepDelay', 'TaxiOut', 'CRSArrTime'], outputCol='features')  
     #Nacho: setHandlerInvalid para eliminar los nulls de DepDelay
     input_dataset_va_df = vector_assembler.setHandleInvalid("skip").transform(data)
     input_dataset_va_fl_df = input_dataset_va_df.select(['features', 'ArrDelay'])
