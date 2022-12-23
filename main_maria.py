@@ -89,23 +89,38 @@ class App():
             data = data.drop("ArrTime", "ActualElapsedTime", "AirTime", "TaxiIn", "Diverted", "CarrierDelay",
                              "WeatherDelay", "NASDelay", "SecurityDelay", "LateAircraftDelay",
 
-                             "UniqueCarrier", "FlightNum", "TailNum", "Distance", "Origin", "Dest", "Cancelled",
-                             "Cancellationcode")
+              "UniqueCarrier", "FlightNum", "TailNum", "Distance", "Origin", "Dest", "Cancelled", "Cancellationcode", "Year", "Month", "DayofMonth", "DayOfWeek", "CRSElapsedTime")
 
             # Other columns to drop because of linear dependencies: DepDelay = DepTime - CRSDepTime
             data = data.drop('DepTime', 'CRSDepTime')
 
-            # Eliminating rows with missing values
-            data = data.dropna(how='any')
+    #Changing numerical datatypes to double  --> should we generalize and do this for all columns?
+    data = data.withColumn('DepDelay', data.DepDelay.cast('double'))
+    data = data.withColumn('CRSArrTime', data.CRSArrTime.cast('double'))
+    data = data.withColumn('ArrDelay', data.ArrDelay.cast('double'))
+    data = data.withColumn('TaxiOut', data.TaxiOut.cast('double'))
 
-            # Changing numerical datatypes to double  --> should we generalize and do this for all columns?
-            data = data.withColumn('DepDelay', data.DepDelay.cast('double'))
-            data = data.withColumn('CRSArrTime', data.CRSElapsedTime.cast('double'))
-            data = data.withColumn('ArrDelay', data.ArrDelay.cast('double'))
+    #Droping the rows with missing values in the target variable
+    data = data.na.drop(subset=["ArrDelay"])
 
-            data.printSchema()
-            data.show(10, False)
+    #Filling in missing values with 0 in the selected feature columns
+    data = data.na.fill(value = 0)
+    data.show(5,False)
 
+
+    data.printSchema()
+    data.show(10, False)
+
+
+    print('-----------------BUILDING MODEL----------------')
+    #Prepare independent variable(feature) and dependant variable using assembler
+    inputCols = ['DepDelay', 'TaxiOut', 'CRSArrTime']
+
+    vector_assembler = VectorAssembler(inputCols=inputCols, outputCol='features')
+    #Nacho: setHandlerInvalid para eliminar los nulls de DepDelay
+    input_dataset_va_df = vector_assembler.setHandleInvalid("skip").transform(data)
+    input_dataset_va_fl_df = input_dataset_va_df.select(['features', 'ArrDelay'])
+    input_dataset_va_fl_df.show(10, False)
             print('-----------------BUILDING MODEL----------------')
             texto_info += "-----BUILDING MODEL-----" + "\n"
 
@@ -116,34 +131,25 @@ class App():
             input_dataset_va_fl_df = input_dataset_va_df.select(['features', 'ArrDelay'])
             input_dataset_va_fl_df.show(10, False)
 
-            # Splitting training and testing dataset 70% for training and 30% for testing
-            train_test_dataset = input_dataset_va_fl_df.randomSplit([0.7, 0.3], seed=10)  # seed guarantees randomness
-            print(type(train_test_dataset))
+    # Splitting training and testing dataset 70% for training and 30% for testing
+    train_test_dataset = input_dataset_va_fl_df.randomSplit([0.7, 0.3], seed=10)  # seed guarantees randomness
+    print(type(train_test_dataset))
+    train_dataset_df = train_test_dataset[0]
+    test_dataset_df = train_test_dataset[1]
 
-            train_dataset_df = train_test_dataset[0]
-            # Nacho: Drop para eliminar los nulls
-            train_dataset_df = train_dataset_df.na.drop()
-            print(train_dataset_df)
+    # Training the model
+    linear_regression_model = LinearRegression(featuresCol='features',
+                                               labelCol='ArrDelay',
+                                               maxIter=100,
+                                               regParam=0.2,
+                                               elasticNetParam=0.8)
+    # Building the model
+    linear_regression_model = linear_regression_model.fit(train_dataset_df)
 
-
-            test_dataset_df = train_test_dataset[1]
-            # Nacho: Drop para eliminar los nulls
-            test_dataset_df = test_dataset_df.na.drop()
-
-            # Training the model
-            # I need to add in the comments what does every parameter of the LinearRegression function do
-            linear_regression_model = LinearRegression(featuresCol='features',
-                                                       labelCol='ArrDelay',
-                                                       maxIter=100,
-                                                       regParam=0.2,
-                                                       elasticNetParam=0.8)
-            # Building the model
-
-            linear_regression_model = linear_regression_model.fit(train_dataset_df)
-            # Now we do the testing part
-            predictions_df = linear_regression_model.transform(test_dataset_df)
-            # The column predictions is the expected result and it is generated by the past functions
-            predictions_df.select("prediction", "ArrDelay", "features").show(5, False)
+    # Testing the model
+    predictions_df = linear_regression_model.transform(test_dataset_df)
+    # The column predictions is the expected result and it is generated by the past functions
+    predictions_df.select("prediction", "ArrDelay", "features").show(5, False)
 
             predictions_pandas = pd.DataFrame(predictions_df.head(5), columns=["features","ArrDelay","prediction"])
             #predictions_reduced_df = predictions_df.select("prediction", "ArrDelay", "features")
