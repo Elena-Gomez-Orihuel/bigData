@@ -1,0 +1,27 @@
+Index: main.py
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	
++++ b/main.py	
+@@ -18,7 +18,6 @@
+     # Forbidden variables and useless variables divided by an intro(remember to add CRSElapsedTime and TaxiOut, not added for safety)
+     data.drop("ArrTime", "ActualElapsedTime", "AirTime", "TaxiIn", "Diverted", "CarrierDelay",
+               "WeatherDelay", "NASDelay", "SecurityDelay", "LateAircraftDelay",
+-
+               "UniqueCarrier", "FlightNum", "TailNum", "Distance", "Origin", "Dest", "Cancelled", "Cancellationcode")
+ 
+     # another thing to consider: do we do more than one model like the github project?
+Index: main_Nacho.py
+===================================================================
+diff --git a/main_Nacho.py b/main_Nacho.py
+--- a/main_Nacho.py	
++++ b/main_Nacho.py	
+@@ -20,7 +20,7 @@
+ 
+ 
+     spark = SparkSession.builder.appName("Linear Regression").master("local[*]").getOrCreate()
+-    data = sqlContext.read.csv(path=input_dataset_path, inferSchema=True, header=True)
++    data = spark.read.csv(path=input_dataset_path, inferSchema=True, header=True)
+     # Here we delete all the instances that have been cancelled or that do not have a value in DepDelay, as well as formatting it if needed
+     # beautiful cleaning code here
+ 

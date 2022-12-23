@@ -1,0 +1,27 @@
+Index: main_maria.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main_maria.py b/main_maria.py
+--- a/main_maria.py	
++++ b/main_maria.py	
+@@ -10,8 +10,8 @@
+ 
+ # import org.apache.spark.sql.SQLContext
+ 
+-#input_dataset_path = "./resources/2000.csv"
+-input_dataset_path = "C:/Users/USUARIO/Desktop/Master HMDA/1 Semester/BIG DATA/Flight Detection/resources/2000.csv"
++input_dataset_path = "./resources/2000.csv"
++#input_dataset_path = "C:/Users/USUARIO/Desktop/Master HMDA/1 Semester/BIG DATA/Flight Detection/resources/2000.csv"
+ 
+ 
+ 
+@@ -29,7 +29,6 @@
+     # Forbidden variables and useless variables divided by an intro(remember to add CRSElapsedTime and TaxiOut, not added for safety)
+     data = data.drop("ArrTime", "ActualElapsedTime", "AirTime", "TaxiIn", "Diverted", "CarrierDelay",
+               "WeatherDelay", "NASDelay", "SecurityDelay", "LateAircraftDelay",
+-
+               "UniqueCarrier", "FlightNum", "TailNum", "Distance", "Origin", "Dest", "Cancelled", "Cancellationcode")
+ 
+     #Other columns to drop because of linear dependencies: DepDelay = DepTime - CRSDepTime 
