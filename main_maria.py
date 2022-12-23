@@ -21,6 +21,7 @@ class App():
         self.root = Tk()
         self.root.title("Flight Delay Predictor")
         self.root.geometry('900x700')
+        self.root.iconbitmap('icon.ico')
         fbold = font.Font(weight='bold')
         self.tag1 = ttk.Label(self.root, text="Please introduce the path to your dataset:",
                                font=fbold)
