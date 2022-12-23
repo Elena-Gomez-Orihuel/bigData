@@ -86,7 +86,6 @@ class App():
             print('----------------PREPROCESSING--------------------------')
             # Eliminating cancelled flights
             data = data[data.Cancelled != 1]
-            texto_info += "-----PREPROCESSING-----" + "\n" + "\n"
             self.tinfo.configure(state='normal')
             self.tinfo.insert(END, texto_info)
             self.tinfo.configure(state='disabled')
@@ -123,8 +122,7 @@ class App():
             #Prepare independent variable(feature) and dependant variable using assembler
             inputCols = ['DepDelay', 'TaxiOut', 'CRSArrTime', 'Distance']
 
-            print('-----------------BUILDING MODEL----------------')
-            texto_info += "-----BUILDING MODEL-----" + "\n"
+
             vector_assembler = VectorAssembler(inputCols=inputCols, outputCol='features')
             #Nacho: setHandlerInvalid para eliminar los nulls de DepDelay
             input_dataset_va_df = vector_assembler.setHandleInvalid("skip").transform(data)
