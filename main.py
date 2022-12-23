@@ -14,7 +14,8 @@ import pandas as pd
 # import org.apache.spark.sql.SQLContext
 
 # input_dataset_path = "./resources/2000.csv"
-input_dataset_path = "C:/Users/eleni/PycharmProjects/bigData/resources/2000.csv"
+#  C:/Users/eleni/PycharmProjects/bigData/resources/2000.csv
+input_dataset_path = ""
 
 class App():
     def __init__(self):
@@ -28,6 +29,8 @@ class App():
         self.path = StringVar()
         self.path.set("")
         print('path')
+        print(type(self.path))
+        print(self.path.get())
         print(self.path)
         self.ctext1 = ttk.Entry(self.root,
                                 textvariable=self.path)
@@ -75,7 +78,7 @@ class App():
 
 
             spark = SparkSession.builder.appName("Linear Regression").master("local[*]").getOrCreate()
-            data = spark.read.csv(path=input_dataset_path, inferSchema=True, header=True)
+            data = spark.read.csv(path=self.path.get(), inferSchema=True, header=True)
 
             print('----------------PREPROCESSING--------------------------')
             # Eliminating cancelled flights
