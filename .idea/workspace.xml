@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6c9a0d64-f3f4-47c4-9253-3fe136981efc" name="Changes" comment="Add more regression methods">
-      <change beforePath="$PROJECT_DIR$/BD Report.docx" beforeDir="false" afterPath="$PROJECT_DIR$/BD Report.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_maria.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,16 +197,5 @@
     <MESSAGE value="Commit" />
     <MESSAGE value="Add more regression methods" />
     <option name="LAST_COMMIT_MESSAGE" value="Add more regression methods" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>182</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
